@@ -13,3 +13,7 @@ serde = "1.0.136"
 version = "2.1.0"
 default-features = false
 features = ["sync"]
+
+[dependencies.chrono]
+version = "0.4"
+features = ["serde"]

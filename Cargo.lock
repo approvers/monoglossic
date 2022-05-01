@@ -276,6 +276,7 @@ dependencies = [
  "libc",
  "num-integer",
  "num-traits",
+ "serde",
  "time",
  "winapi",
 ]
@@ -843,6 +844,7 @@ dependencies = [
 name = "monoglossic"
 version = "0.1.0"
 dependencies = [
+ "chrono",
  "clap",
  "mongodb",
  "serde",

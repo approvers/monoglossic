@@ -4,6 +4,7 @@ pub mod db_controller {
     use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]
+    // Task型
     pub struct Task {
         #[serde(with = "ts_seconds")]
         scheduled_date: DateTime<Utc>,
@@ -14,6 +15,7 @@ pub mod db_controller {
         finish: bool,
     }
 
+    //新規タスクの追加
     pub fn add_task(data: Task) -> Result<(), mongodb::error::Error> {
         let client = Client::with_uri_str("mongodb://localhost27017")?;
         let database = client.database("taskdb");

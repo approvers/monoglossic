@@ -17,7 +17,7 @@ pub mod db_controller {
 
     //新規タスクの追加
     pub fn add_task(new_task: Task) -> Result<(), mongodb::error::Error> {
-        let client = Client::with_uri_str("mongodb://localhost27017")?;
+        let client = Client::with_uri_str("mongodb://localhost:27017")?;
         let database = client.database("taskdb");
         let collection = database.collection::<Task>("task");
 

@@ -103,9 +103,15 @@ dependencies = [
 
 [[package]]
 name = "async-std"
+<<<<<<< HEAD
 version = "1.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52580991739c5cdb36cde8b2a516371c0a3b70dda36d916cc08b82372916808c"
+=======
+version = "1.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f8056f1455169ab86dd47b47391e4ab0cbd25410a70e9fe675544f49bafaf952"
+>>>>>>> origin/feat/backend
 dependencies = [
  "async-attributes",
  "async-channel",
@@ -276,6 +282,10 @@ dependencies = [
  "libc",
  "num-integer",
  "num-traits",
+<<<<<<< HEAD
+=======
+ "serde",
+>>>>>>> origin/feat/backend
  "time",
  "winapi",
 ]
@@ -306,9 +316,15 @@ dependencies = [
 
 [[package]]
 name = "cpufeatures"
+<<<<<<< HEAD
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "59a6001667ab124aebae2a495118e11d30984c3a653e99d86d58971708cf5e4b"
+=======
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "95059428f66df56b63431fdb4e1947ed2190586af5c5a8a8b71122bdf5a7f469"
+>>>>>>> origin/feat/backend
 dependencies = [
  "libc",
 ]
@@ -700,9 +716,15 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
+<<<<<<< HEAD
 version = "0.2.121"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "efaa7b300f3b5fe8eb6bf21ce3895e1751d9665086af2d64b42f19701015ff4f"
+=======
+version = "0.2.120"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ad5c14e80759d0939d013e6ca49930e59fc53dd8e5009132f76240c179380c09"
+>>>>>>> origin/feat/backend
 
 [[package]]
 name = "linked-hash-map"
@@ -721,9 +743,15 @@ dependencies = [
 
 [[package]]
 name = "log"
+<<<<<<< HEAD
 version = "0.4.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6389c490849ff5bc16be905ae24bc913a9c8892e19b2341dbc175e14c341c2b8"
+=======
+version = "0.4.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "51b9bbe6c47d51fc3e1a9b945965946b4c44142ab8792c50835a980d362c2710"
+>>>>>>> origin/feat/backend
 dependencies = [
  "cfg-if",
  "value-bag",
@@ -843,6 +871,10 @@ dependencies = [
 name = "monoglossic"
 version = "0.1.0"
 dependencies = [
+<<<<<<< HEAD
+=======
+ "chrono",
+>>>>>>> origin/feat/backend
  "clap",
  "mongodb",
  "serde",
@@ -1050,9 +1082,15 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
+<<<<<<< HEAD
 version = "0.2.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8ae183fc1b06c149f0c1793e1eb447c8b04bfe46d48e9e48bfb8d2d7ed64ecf0"
+=======
+version = "0.2.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8380fe0152551244f0747b1bf41737e0f8a74f97a14ccefd1148187271634f3c"
+>>>>>>> origin/feat/backend
 dependencies = [
  "bitflags",
 ]

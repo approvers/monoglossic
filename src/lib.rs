@@ -1,3 +1,27 @@
+pub mod config {
+    use serde::Deserialize;
+    use serde_json::{from_reader, Result};
+    use std::error::Error;
+    use std::fs::File;
+    use std::io::BufReader;
+    use std::path::Path;
+    #[derive(Deserialize, Debug)]
+    pub struct Config {
+        pub db_address: String,
+    }
+
+    impl Config {
+        pub fn read_config<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
+            let file = File::open(path)?;
+            let reader = BufReader::new(file);
+
+            // Read the JSON contents of the file
+            let u = serde_json::from_reader(reader)?;
+            Ok()
+        }
+    }
+}
+
 pub mod db_controller {
     use chrono::{serde::ts_seconds, DateTime, Utc};
     use mongodb::{bson::doc, sync::Client};

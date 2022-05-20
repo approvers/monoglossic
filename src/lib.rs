@@ -11,16 +11,14 @@ pub mod config {
         pub db_address: String,
     }
 
-    impl Config {
-        pub fn read_config<P: AsRef<Path>>(&self, path: P) -> Result<(), Box<dyn Error>> {
-            let file = File::open(path)?;
-            let reader = BufReader::new(file);
+    pub fn read_config<P: AsRef<Path>>(path: P) -> Result<Config, serde_json::Error> {
+        let file = File::open(path)?;
+        let reader = BufReader::new(file);
 
-            // read json from file
-            // self = serde_json::from_reader(reader)?;
+        // read json from file
+        let json_data: Config = serde_json::from_reader(reader)?;
 
-            Ok(())
-        }
+        Ok(json_data)
     }
 }
 

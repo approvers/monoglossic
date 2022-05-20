@@ -41,7 +41,6 @@ pub mod db_controller {
 
     //新規タスクの追加
     pub fn add_task(new_task: Task, db_address: String) -> Result<(), mongodb::error::Error> {
-        //let client = Client::with_uri_str("mongodb://localhost:27017")?;
         let client = Client::with_uri_str(db_address)?;
         let database = client.database("taskdb");
         let collection = database.collection::<Task>("task");
@@ -76,7 +75,8 @@ mod tests {
     }
     #[test]
     fn read_config_from_json() {
-        let config: Config = read_json_config("test/config.json").expect("Cannot read Json config.");
+        let config: Config =
+            read_json_config("test/config.json").expect("Cannot read Json config.");
         assert_eq!(config.db_address, "mongodb://localhost:27017");
     }
 }

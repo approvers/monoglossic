@@ -11,16 +11,14 @@ pub mod config {
         pub db_address: String,
     }
 
-    impl Config {
-        pub fn read_config<P: AsRef<Path>>(&self, path: P) -> Result<(), Box<dyn Error>> {
-            let file = File::open(path)?;
-            let reader = BufReader::new(file);
+    pub fn read_json_config<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
+        let file = File::open(path).expect("Cannot read file");
+        let reader = BufReader::new(file);
 
-            // read json from file
-            // self = serde_json::from_reader(reader)?;
+        // read json from file
+        let json_data = serde_json::from_reader(reader)?;
 
-            Ok(())
-        }
+        Ok(json_data)
     }
 }
 
@@ -42,8 +40,9 @@ pub mod db_controller {
     }
 
     //新規タスクの追加
-    pub fn add_task(new_task: Task) -> Result<(), mongodb::error::Error> {
-        let client = Client::with_uri_str("mongodb://localhost:27017")?;
+    pub fn add_task(new_task: Task, db_address: String) -> Result<(), mongodb::error::Error> {
+        //let client = Client::with_uri_str("mongodb://localhost:27017")?;
+        let client = Client::with_uri_str(db_address)?;
         let database = client.database("taskdb");
         let collection = database.collection::<Task>("task");
 
@@ -55,7 +54,10 @@ pub mod db_controller {
 
 #[cfg(test)]
 mod tests {
-    use crate::db_controller::{add_task, Task};
+    use crate::{
+        config::{read_json_config, Config},
+        db_controller::{add_task, Task},
+    };
     use chrono::prelude::Utc;
 
     #[test]
@@ -67,8 +69,14 @@ mod tests {
             memo: String::from("Life Love Peace"),
             finish: false,
         };
+        let db_address = String::from("mongodb://localhost:27017");
 
-        add_task(new_task).expect("Failed to add new Task");
+        add_task(new_task, db_address).expect("Failed to add new Task");
         println!("add new Task");
+    }
+    #[test]
+    fn read_config_from_json() {
+        let config: Config = read_json_config("test/config.json").expect("Cannot read Json config.");
+        assert_eq!(config.db_address, "mongodb://localhost:27017");
     }
 }

@@ -23,20 +23,32 @@ pub mod config {
 }
 
 pub mod db_controller {
-    use chrono::{serde::ts_seconds, DateTime, Utc};
+    use chrono::{serde::ts_seconds, serde::ts_seconds_option, DateTime, Utc};
     use mongodb::{bson::doc, sync::Collection};
     use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]
     // Task型
     pub struct Task {
-        #[serde(with = "ts_seconds")]
-        pub scheduled_date: DateTime<Utc>,
+        #[serde(with = "ts_seconds_option")]
+        pub scheduled_date: Option<chrono::DateTime<Utc>>,
         #[serde(with = "ts_seconds")]
         pub register_date: DateTime<Utc>,
         pub title: String,
         pub memo: String,
         pub finish: bool,
+    }
+
+    impl Default for Task {
+        fn default() -> Self {
+            Self {
+                scheduled_date: None,
+                register_date: Utc::now(),
+                title: "".into(),
+                memo: "".into(),
+                finish: false,
+            }
+        }
     }
 
     //新規タスクの追加
@@ -55,17 +67,15 @@ mod tests {
         config::{read_json_config, Config},
         db_controller::{add_task, Task},
     };
-    use chrono::prelude::Utc;
+    use chrono::{TimeZone, Utc};
     use mongodb::sync::Client;
 
     #[test]
-    fn add_new_task() {
+    fn add_new_task_schedule_none() {
         let new_task = Task {
-            scheduled_date: Utc::now(),
-            register_date: Utc::now(),
-            title: String::from("LLP"),
-            memo: String::from("Life Love Peace"),
-            finish: false,
+            title: "LLP".into(),
+            memo: "Life Love Peace".into(),
+            ..Default::default()
         };
         let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot Connect DB");
         let database = client.database("testdb");
@@ -74,6 +84,23 @@ mod tests {
         add_task(new_task, &collection).expect("Failed to add new Task");
         println!("add new Task");
     }
+
+    #[test]
+    fn add_new_task_scheduled() {
+        let new_task = Task {
+            scheduled_date: Some(Utc.ymd(2022, 1, 23).and_hms(0, 0, 0)),
+            title: "LLP".into(),
+            memo: "Life Love Peace".into(),
+            ..Default::default()
+        };
+        let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot Connect DB");
+        let database = client.database("testdb");
+        let collection = database.collection::<Task>("task");
+
+        add_task(new_task, &collection).expect("Failed to add new Task");
+        println!("add new Task");
+    }
+
     #[test]
     fn read_config_from_json() {
         let config: Config =

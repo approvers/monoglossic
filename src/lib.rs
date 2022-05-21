@@ -45,8 +45,8 @@ pub mod db_controller {
         let database = client.database("taskdb");
         let collection = database.collection::<Task>("task");
 
-        let docs = vec![new_task];
-        collection.insert_many(docs, None)?;
+        collection.insert_one(new_task, None)?;
+
         Ok(())
     }
 }
@@ -64,8 +64,8 @@ mod tests {
         let new_task = Task {
             scheduled_date: Utc::now(),
             register_date: Utc::now(),
-            title: String::from("LLP"),
-            memo: String::from("Life Love Peace"),
+            title: "LLP".into(),
+            memo: "Life Love Peace".into(),
             finish: false,
         };
         let db_address = String::from("mongodb://localhost:27017");

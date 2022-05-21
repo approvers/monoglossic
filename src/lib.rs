@@ -22,7 +22,7 @@ pub mod config {
     }
 }
 
-pub mod db_controller {
+pub mod db {
     use chrono::{serde::ts_seconds, serde::ts_seconds_option, DateTime, Utc};
     use mongodb::{bson::doc, sync::Collection};
     use serde::{Deserialize, Serialize};
@@ -65,7 +65,7 @@ pub mod db_controller {
 mod tests {
     use crate::{
         config::{read_json_config, Config},
-        db_controller::{add_task, Task},
+        db::{add_task, Task},
     };
     use chrono::{TimeZone, Utc};
     use mongodb::sync::Client;

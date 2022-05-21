@@ -24,7 +24,7 @@ pub mod config {
 
 pub mod db_controller {
     use chrono::{serde::ts_seconds, DateTime, Utc};
-    use mongodb::{bson::doc, sync::Client};
+    use mongodb::{bson::doc, sync::Collection};
     use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]
@@ -40,13 +40,11 @@ pub mod db_controller {
     }
 
     //新規タスクの追加
-    pub fn add_task(new_task: Task, db_address: String) -> Result<(), mongodb::error::Error> {
-        let client = Client::with_uri_str(db_address)?;
-        let database = client.database("taskdb");
-        let collection = database.collection::<Task>("task");
-
-        let docs = vec![new_task];
-        collection.insert_many(docs, None)?;
+    pub fn add_task(
+        new_task: Task,
+        collection: &Collection<Task>,
+    ) -> Result<(), mongodb::error::Error> {
+        collection.insert_one(new_task, None)?;
         Ok(())
     }
 }
@@ -58,6 +56,7 @@ mod tests {
         db_controller::{add_task, Task},
     };
     use chrono::prelude::Utc;
+    use mongodb::sync::Client;
 
     #[test]
     fn add_new_task() {
@@ -68,9 +67,11 @@ mod tests {
             memo: String::from("Life Love Peace"),
             finish: false,
         };
-        let db_address = String::from("mongodb://localhost:27017");
+        let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot Connect DB");
+        let database = client.database("testdb");
+        let collection = database.collection::<Task>("task");
 
-        add_task(new_task, db_address).expect("Failed to add new Task");
+        add_task(new_task, &collection).expect("Failed to add new Task");
         println!("add new Task");
     }
     #[test]

@@ -11,7 +11,7 @@ pub mod config {
         pub db_address: String,
     }
 
-    pub fn read_json_config<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
+    pub fn read_json_config(path: impl AsRef<Path>) -> Result<Config, Box<dyn Error>> {
         let file = File::open(path).expect("Cannot read file");
         let reader = BufReader::new(file);
 

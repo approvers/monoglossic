@@ -77,7 +77,7 @@ mod tests {
             memo: "Life Love Peace".into(),
             ..Default::default()
         };
-        let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot Connect to DB");
+        let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot connect to DB");
         let database = client.database("testdb");
         let collection = database.collection::<Task>("task");
 
@@ -92,7 +92,7 @@ mod tests {
             memo: "Life Love Peace".into(),
             ..Default::default()
         };
-        let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot Connect to DB");
+        let client = Client::with_uri_str("mongodb://localhost:27017").expect("Cannot connect to DB");
         let database = client.database("testdb");
         let collection = database.collection::<Task>("task");
 

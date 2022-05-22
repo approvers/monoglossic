@@ -12,7 +12,7 @@ pub mod config {
     }
 
     pub fn read_json_config(path: impl AsRef<Path>) -> Result<Config, Box<dyn Error>> {
-        let file = File::open(path).expect("Cannot read file");
+        let file = File::open(path)?;
         let reader = BufReader::new(file);
 
         // read json from file
@@ -82,7 +82,6 @@ mod tests {
         let collection = database.collection::<Task>("task");
 
         add_task(new_task, &collection).expect("Failed to add new Task");
-        println!("add new Task");
     }
 
     #[test]

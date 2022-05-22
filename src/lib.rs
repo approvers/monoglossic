@@ -102,7 +102,7 @@ mod tests {
     #[test]
     fn read_config_from_json() {
         let config: Config =
-            read_json_config("test/config.json").expect("Cannot read Json config.");
+            read_json_config("test/config.json").expect("Cannot read `test/config.json`.");
         assert_eq!(config.db_address, "mongodb://localhost:27017");
     }
 }

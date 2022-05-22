@@ -97,7 +97,6 @@ mod tests {
         let collection = database.collection::<Task>("task");
 
         add_task(new_task, &collection).expect("Failed to add new Task");
-        println!("add new Task");
     }
 
     #[test]

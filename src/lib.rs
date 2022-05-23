@@ -11,8 +11,8 @@ pub mod config {
         pub db_address: String,
     }
 
-    pub fn read_json_config<P: AsRef<Path>>(path: P) -> Result<Config, Box<dyn Error>> {
-        let file = File::open(path).expect("Cannot read file");
+    pub fn read_json_config(path: impl AsRef<Path>) -> Result<Config, Box<dyn Error>> {
+        let file = File::open(path)?;
         let reader = BufReader::new(file);
 
         // read json from file
@@ -22,16 +22,16 @@ pub mod config {
     }
 }
 
-pub mod db_controller {
-    use chrono::{serde::ts_seconds, DateTime, Utc};
-    use mongodb::{bson::doc, sync::Client};
+pub mod db {
+    use chrono::{serde::ts_seconds, serde::ts_seconds_option, DateTime, Utc};
+    use mongodb::{bson::doc, sync::Collection};
     use serde::{Deserialize, Serialize};
 
     #[derive(Debug, Serialize, Deserialize)]
     // Task型
     pub struct Task {
-        #[serde(with = "ts_seconds")]
-        pub scheduled_date: DateTime<Utc>,
+        #[serde(with = "ts_seconds_option")]
+        pub scheduled_date: Option<chrono::DateTime<Utc>>,
         #[serde(with = "ts_seconds")]
         pub register_date: DateTime<Utc>,
         pub title: String,
@@ -39,14 +39,24 @@ pub mod db_controller {
         pub finish: bool,
     }
 
+    impl Default for Task {
+        fn default() -> Self {
+            Self {
+                scheduled_date: None,
+                register_date: Utc::now(),
+                title: "".into(),
+                memo: "".into(),
+                finish: false,
+            }
+        }
+    }
+
     //新規タスクの追加
-    pub fn add_task(new_task: Task, db_address: String) -> Result<(), mongodb::error::Error> {
-        let client = Client::with_uri_str(db_address)?;
-        let database = client.database("taskdb");
-        let collection = database.collection::<Task>("task");
-
+    pub fn add_task(
+        new_task: Task,
+        collection: &Collection<Task>,
+    ) -> Result<(), mongodb::error::Error> {
         collection.insert_one(new_task, None)?;
-
         Ok(())
     }
 }
@@ -55,28 +65,46 @@ pub mod db_controller {
 mod tests {
     use crate::{
         config::{read_json_config, Config},
-        db_controller::{add_task, Task},
+        db::{add_task, Task},
     };
-    use chrono::prelude::Utc;
+    use chrono::{TimeZone, Utc};
+    use mongodb::sync::Client;
 
     #[test]
-    fn add_new_task() {
+    fn add_new_task_schedule_none() {
         let new_task = Task {
-            scheduled_date: Utc::now(),
-            register_date: Utc::now(),
             title: "LLP".into(),
             memo: "Life Love Peace".into(),
-            finish: false,
+            ..Default::default()
         };
-        let db_address = String::from("mongodb://localhost:27017");
+        let client =
+            Client::with_uri_str("mongodb://localhost:27017").expect("Cannot connect to DB");
+        let database = client.database("testdb");
+        let collection = database.collection::<Task>("task");
 
-        add_task(new_task, db_address).expect("Failed to add new Task");
-        println!("add new Task");
+        add_task(new_task, &collection).expect("Failed to add new Task");
     }
+
+    #[test]
+    fn add_new_task_scheduled() {
+        let new_task = Task {
+            scheduled_date: Some(Utc.ymd(2022, 1, 23).and_hms(0, 0, 0)),
+            title: "LLP".into(),
+            memo: "Life Love Peace".into(),
+            ..Default::default()
+        };
+        let client =
+            Client::with_uri_str("mongodb://localhost:27017").expect("Cannot connect to DB");
+        let database = client.database("testdb");
+        let collection = database.collection::<Task>("task");
+
+        add_task(new_task, &collection).expect("Failed to add new Task");
+    }
+
     #[test]
     fn read_config_from_json() {
         let config: Config =
-            read_json_config("test/config.json").expect("Cannot read Json config.");
+            read_json_config("test/config.json").expect("Cannot read `test/config.json`.");
         assert_eq!(config.db_address, "mongodb://localhost:27017");
     }
 }

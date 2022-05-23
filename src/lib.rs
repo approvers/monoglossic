@@ -23,7 +23,10 @@ pub mod config {
 }
 
 pub mod db {
-    use chrono::{serde::ts_seconds, serde::ts_seconds_option, DateTime, Utc};
+    use chrono::{
+        serde::{ts_seconds, ts_seconds_option},
+        DateTime, Utc,
+    };
     use mongodb::{bson::doc, sync::Collection};
     use serde::{Deserialize, Serialize};
 
@@ -31,7 +34,7 @@ pub mod db {
     // Task型
     pub struct Task {
         #[serde(with = "ts_seconds_option")]
-        pub scheduled_date: Option<chrono::DateTime<Utc>>,
+        pub scheduled_date: Option<DateTime<Utc>>,
         #[serde(with = "ts_seconds")]
         pub register_date: DateTime<Utc>,
         pub title: String,
@@ -44,8 +47,8 @@ pub mod db {
             Self {
                 scheduled_date: None,
                 register_date: Utc::now(),
-                title: "".into(),
-                memo: "".into(),
+                title: String::new(),
+                memo: String::new(),
                 finish: false,
             }
         }
